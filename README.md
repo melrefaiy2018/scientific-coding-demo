@@ -123,7 +123,7 @@ pip install numpy pandas matplotlib scipy
 from Best_model_pick import SimulationAnalyzer
 
 # 1) Point to your run root and experimental spectrum
-base_dir = "/path/to/CT/Aug4/calc/model_12"
+base_dir = "/path/to/main_folder"
 exp_wavelength_file = "/path/to/exp_spectrum.npy"
 
 # 2) Experimental time-decay parameters (bi-exponential, amplitudes in %)
@@ -174,12 +174,6 @@ an.run_analysis()
 - **Lower score = better overall agreement** (time + spectrum + shoulder + lifetime).  
 - If a model looks good in one domain but poor in the other, the **balance term** and **hard penalty** will push it down the ranking.  
 - Check the top-N plots to see **where** remaining discrepancies live.
-
----
-
-## Citing the method (template)
-
-> We ranked models by a composite score that compares normalized time-resolved decays and spectra to experiment. Spectra are normalized to the peak within 650–760 nm; the red-shoulder area is evaluated in 710–740 nm. Errors are cap-normalized (time/wavelength MSE: 0.05; area: 0.20; lifetime: 0.10) and combined with an equal-weight average and a geometric-mean penalty, with an additional penalty if either primary domain is very poor.
 
 ---
 
