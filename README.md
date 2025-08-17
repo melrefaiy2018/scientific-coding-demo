@@ -22,27 +22,35 @@ Simulations generate many trajectories under different parameters. Selecting the
    - **Spectrum**: each spectrum (sim and experimental) is normalized to its **peak within 650–760 nm**.
 
 2. **Error metrics**
-   - \(E_{\text{time}}\): MSE between normalized simulated decay and experimental bi-exponential on the same time grid.  
-   - \(E_{\text{wl}}\): MSE between normalized spectra **only within 650–760 nm**.  
-   - \(E_{\text{area}}\): relative AUC error in the **red-shoulder ROI (710–740 nm)**.  
-   - \(E_{\tau}\): relative error in **average lifetime** from a bi-exponential fit to the normalized simulated decay.
+   - $E_{\text{time}}$: MSE between normalized simulated decay and experimental bi-exponential on the same time grid.  
+   - $E_{\text{wl}}$: MSE between normalized spectra **only within 650–760 nm**.  
+   - $E_{\text{area}}$: relative AUC error in the **red-shoulder ROI (710–740 nm)**.  
+   - $E_{\tau}$: relative error in **average lifetime** from a bi-exponential fit to the normalized simulated decay.
 
 3. **Cap-normalization and score**
-   - Each error is divided by its cap and clipped to 1.0:
-     $$
-     E_{i,\text{norm}}=\min\!\left(\frac{E_i}{E_{i,\max}},\,1.0\right),\quad
-     E_{\text{time},\max}=0.05,\;
-     E_{\text{wl},\max}=0.05,\;
-     E_{\text{area},\max}=0.20,\;
-     E_{\tau,\max}=0.10.
-     $$
-   - Final score (lower is better):
-     $$
-     S=\tfrac{1}{2}\!\left(\sum_i w_i\,E_{i,\text{norm}}\right)
-     +\tfrac{1}{2}\sqrt{E_{\text{time,norm}}\,E_{\text{wl,norm}}},\qquad w_i=0.25.
-     $$
-   - **Hard penalty** if either primary domain is very poor:
-     $$\text{if }E_{\text{time,norm}}>0.9\ \text{or}\ E_{\text{wl,norm}}>0.9,\quad S\leftarrow10\,S.$$
+
+   Each error is divided by its cap and clipped to 1.0:
+
+   $$
+   E_{i,\text{norm}}=\min\!\left(\frac{E_i}{E_{i,\max}},\,1.0\right),\quad
+   E_{\text{time},\max}=0.05,\;
+   E_{\text{wl},\max}=0.05,\;
+   E_{\text{area},\max}=0.20,\;
+   E_{\tau,\max}=0.10.
+   $$
+
+   Final score (lower is better):
+
+   $$
+   S=\tfrac{1}{2}\!\left(\sum_i w_i\,E_{i,\text{norm}}\right)
+   +\tfrac{1}{2}\sqrt{E_{\text{time,norm}}\,E_{\text{wl,norm}}},\qquad w_i=0.25.
+   $$
+
+   Hard penalty if either primary domain is very poor:
+
+   $$
+   \text{if }E_{\text{time,norm}}>0.9\ \text{or}\ E_{\text{wl,norm}}>0.9,\quad S\leftarrow10\,S.
+   $$
 
 ---
 
@@ -98,7 +106,7 @@ base_dir = "/path/to/CT/Aug4/calc/model_12"
 exp_wavelength_file = "/path/to/exp_spectrum.npy"
 
 # 2) Experimental time-decay parameters (bi-exponential, amplitudes in %)
-exp_time_params = dict(a1_pct=60.0, tau1=1.2, a2_pct=40.0, tau2=5.0, tau_avg= (0.6*1.2+0.4*5.0))
+exp_time_params = dict(a1_pct=60.0, tau1=1.2, a2_pct=40.0, tau2=5.0, tau_avg=(0.6*1.2 + 0.4*5.0))
 
 # 3) Create analyzer (defaults: wavelength_range=(650,760), top N=10)
 an = SimulationAnalyzer(
@@ -124,17 +132,10 @@ an.run_analysis()
 
 ## What the score looks at (exactly)
 
-- **Overall spectral agreement in 650–760 nm**  
-  – After normalization to the **in-window** peak, we compute \(E_{\text{wl}}\) on that same window only.
-
-- **Red shoulder (710–740 nm)**  
-  – We integrate normalized intensities over 710–740 nm for both sim and experiment and compute the **relative area error**, \(E_{\text{area}}\).
-
-- **Decay shape + lifetime**  
-  – We compare the normalized simulated decay to the **experimental bi-exponential** (MSE), and we fit a bi-exponential to extract the simulated **average lifetime** for \(E_{\tau}\).
-
-- **Balance requirement**  
-  – The geometric-mean term \(\sqrt{E_{\text{time}}E_{\text{wl}}}\) penalizes models that only fit one domain.
+- **Overall spectral agreement in 650–760 nm** — after normalization to the in-window peak, we compute $E_{\text{wl}}$ on that window only.  
+- **Red shoulder (710–740 nm)** — integrate normalized intensities over 710–740 nm and compute the relative area error, $E_{\text{area}}$.  
+- **Decay shape + lifetime** — compare the normalized simulated decay to the experimental bi-exponential (MSE), and fit a bi-exponential to get the simulated average lifetime for $E_{\tau}$.  
+- **Balance requirement** — the geometric-mean term $\sqrt{E_{\text{time}}E_{\text{wl}}}$ penalizes models that only fit one domain.
 
 ---
 
@@ -155,11 +156,6 @@ an.run_analysis()
 
 ---
 
-## Citing the method (template)
-
-> We ranked models by a composite score that compares normalized time-resolved decays and spectra to experiment. Spectra are normalized to the peak within 650–760 nm; the red-shoulder area is evaluated in 710–740 nm. Errors are cap-normalized (time/wavelength MSE: 0.05; area: 0.20; lifetime: 0.10) and combined with an equal-weight average and a geometric-mean penalty, with an additional penalty if either primary domain is very poor.
-
----
 
 ## Troubleshooting
 
