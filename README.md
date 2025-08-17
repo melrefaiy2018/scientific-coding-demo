@@ -31,26 +31,26 @@ Simulations generate many trajectories under different parameters. Selecting the
 
    Each error is divided by its cap and clipped to 1.0:
 
-   $$
+   $
    E_{i,\text{norm}}=\min\!\left(\frac{E_i}{E_{i,\max}},\,1.0\right),\quad
    E_{\text{time},\max}=0.05,\;
    E_{\text{wl},\max}=0.05,\;
    E_{\text{area},\max}=0.20,\;
    E_{\tau,\max}=0.10.
-   $$
+   $
 
    Final score (lower is better):
 
-   $$
+   $
    S=\tfrac{1}{2}\!\left(\sum_i w_i\,E_{i,\text{norm}}\right)
    +\tfrac{1}{2}\sqrt{E_{\text{time,norm}}\,E_{\text{wl,norm}}},\qquad w_i=0.25.
-   $$
+   $
 
    Hard penalty if either primary domain is very poor:
 
-   $$
+   $
    \text{if }E_{\text{time,norm}}>0.9\ \text{or}\ E_{\text{wl,norm}}>0.9,\quad S\leftarrow10\,S.
-   $$
+   $
 
 ---
 
