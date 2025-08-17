@@ -182,9 +182,3 @@ an.run_analysis()
 - **No runs found:** verify `base_dir/Run_*` exists and contains `Analysis_Data/Data`.  
 - **No matched pairs:** confirm both files share the same ratio string after `time_resolved_` / `wavelength_resolved_`.  
 - **Weird scaling:** ensure the experimental spectrum covers **650–760 nm**; we normalize to the **in-window** peak.
-
----
-
-## License
-
-[MIT](LICENSE) (or your preferred license)
