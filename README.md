@@ -23,34 +23,43 @@ Simulations generate many trajectories under different parameters. Selecting the
 
 2. **Error metrics**
    - $E_{\text{time}}$: MSE between normalized simulated decay and experimental bi-exponential on the same time grid.  
-   - $E_{\text{wl}}$: MSE between normalized spectra **only within 650–760 nm**.  
-   - $E_{\text{area}}$: relative AUC error in the **red-shoulder ROI (710–740 nm)**.  
+   - $E_{\text{wl}}$: MSE between normalized spectra **only within 650–760\,nm**.  
+   - $E_{\text{area}}$: relative AUC error in the **red-shoulder ROI (710–740\,nm)**.  
    - $E_{\tau}$: relative error in **average lifetime** from a bi-exponential fit to the normalized simulated decay.
 
-3. **Cap-normalization and score**
+3. **Scoring summary**
+   - Errors are **cap-normalized** and combined with a **weighted average** plus a **balance penalty**; lower is better. Detailed equations are below.
 
-   Each error is divided by its cap and clipped to 1.0:
+---
 
-   $
-   E_{i,\text{norm}}=\min\!\left(\frac{E_i}{E_{i,\max}},\,1.0\right),\quad
-   E_{\text{time},\max}=0.05,\;
-   E_{\text{wl},\max}=0.05,\;
-   E_{\text{area},\max}=0.20,\;
-   E_{\tau,\max}=0.10.
-   $
+## Mathematical definitions (render-friendly)
 
-   Final score (lower is better):
+### Cap-normalization
+Display math is taken out of list items to improve rendering on GitHub.
 
-   $
-   S=\tfrac{1}{2}\!\left(\sum_i w_i\,E_{i,\text{norm}}\right)
-   +\tfrac{1}{2}\sqrt{E_{\text{time,norm}}\,E_{\text{wl,norm}}},\qquad w_i=0.25.
-   $
+\[
+E_{i,\text{norm}} = \min\!\left( \frac{E_i}{E_{i,\max}},\, 1.0 \right)
+\]
 
-   Hard penalty if either primary domain is very poor:
+with fixed caps
 
-   $
-   \text{if }E_{\text{time,norm}}>0.9\ \text{or}\ E_{\text{wl,norm}}>0.9,\quad S\leftarrow10\,S.
-   $
+\[
+E_{\text{time},\max}=0.05,\quad
+E_{\text{wl},\max}=0.05,\quad
+E_{\text{area},\max}=0.20,\quad
+E_{\tau,\max}=0.10.
+\]
+
+### Final score
+\[
+S = \tfrac{1}{2}\Big( w_{\text{time}}E_{\text{time,norm}} + w_{\text{wl}}E_{\text{wl,norm}} + w_{\text{area}}E_{\text{area,norm}} + w_{\tau}E_{\tau,\text{norm}} \Big)
++ \tfrac{1}{2}\sqrt{E_{\text{time,norm}}\,E_{\text{wl,norm}}},\qquad w_i=0.25.
+\]
+
+**Hard penalty:** if either primary domain is very poor,
+\[
+E_{\text{time,norm}} > 0.9\ \text{or}\ E_{\text{wl,norm}} > 0.9,\qquad S \leftarrow 10\,S.
+\]
 
 ---
 
@@ -156,6 +165,11 @@ an.run_analysis()
 
 ---
 
+## Citing the method (template)
+
+> We ranked models by a composite score that compares normalized time-resolved decays and spectra to experiment. Spectra are normalized to the peak within 650–760 nm; the red-shoulder area is evaluated in 710–740 nm. Errors are cap-normalized (time/wavelength MSE: 0.05; area: 0.20; lifetime: 0.10) and combined with an equal-weight average and a geometric-mean penalty, with an additional penalty if either primary domain is very poor.
+
+---
 
 ## Troubleshooting
 
